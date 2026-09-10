@@ -26,8 +26,6 @@ class CertificateRequestResource extends JsonResource
                 'note' => $h->note,
                 'date' => $h->created_at->timezone('Asia/Manila')->format('M d, Y h:i A')
             ])),
-            'has_feedback' => $this->feedback !== null,
-            'feedback' => $this->feedback,
         ];
     }
 }
