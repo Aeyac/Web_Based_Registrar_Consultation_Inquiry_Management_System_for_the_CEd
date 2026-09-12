@@ -31,7 +31,8 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
-Route::get('/', [HomeController::class, 'index'])->name('home');
+
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::post('/chat/ask', [\App\Http\Controllers\ChatbotController::class, 'ask'])->name('chat.ask');
 
 // === GOOGLE AUTH ROUTES ===
@@ -47,12 +48,9 @@ Route::middleware('auth')->group(function () {
 // === USER ROUTES ===
 Route::middleware(['auth', 'verified', 'profile.complete'])->group(function () {
     Route::prefix('user')->name('user.')->middleware('role:student|alumni')->group(function () {
-
-        // Reachable even while pending
         Route::get('/pending-verification', [AlumniVerificationController::class, 'pending'])->name('pending-verification');
         Route::post('/verify-alumni', [AlumniVerificationController::class, 'store'])->name('verify-alumni');
 
-        // Everything else requires verified alumni
         Route::middleware('verified.alumni')->group(function () {
             Route::get('/dashboard', [App\Http\Controllers\User\DashboardController::class, 'index'])->name('dashboard');
             Route::get('/requests', [App\Http\Controllers\User\DashboardController::class, 'requests'])->name('requests');
@@ -64,7 +62,6 @@ Route::middleware(['auth', 'verified', 'profile.complete'])->group(function () {
             Route::get('/privacy-policy', [StaticPageController::class, 'privacy'])->name('privacy');
             Route::get('/terms-of-service', [StaticPageController::class, 'terms'])->name('terms');
             Route::post('/notifications/mark-as-read', [NotificationController::class, 'markNotificationsAsRead'])->name('notifications.read');
-
             Route::get('/inquiries', [App\Http\Controllers\User\InquiryController::class, 'index'])->name('inquiries');
             Route::get('/inquiries/attachment/{id}', [InquiryController::class, 'viewAttachment'])->name('inquiries.attachment');
             Route::post('/inquiries', [App\Http\Controllers\User\InquiryController::class, 'store'])->name('inquiries.store');
@@ -97,12 +94,9 @@ Route::middleware(['auth', 'verified', 'profile.complete'])->group(function () {
         Route::post('/users', [UserController::class, 'storeUser'])->name('users.store');
         Route::put('/users/{id}', [UserController::class, 'updateUser'])->name('users.update');
         Route::delete('/users/{id}', [UserController::class, 'destroyUser'])->name('users.destroy');
-        
         Route::post('/notifications/mark-as-read', [NotificationController::class, 'markNotificationsAsRead'])->name('notifications.read');
-        
         Route::get('/export/excel', [ExportController::class, 'exportExcel'])->name('export.excel');
         Route::get('/export/pdf', [ExportController::class, 'exportPdf'])->name('export.pdf');
-        
         Route::get('/inquiries', [InquiryController::class, 'inquiries'])->name('inquiries');
         Route::get('/inquiries/attachment/{id}', [InquiryController::class, 'viewAttachment'])->name('inquiries.attachment');
         Route::post('/inquiries/{id}/reply', [InquiryController::class, 'replyInquiry'])->name('inquiries.reply');
@@ -112,7 +106,6 @@ Route::middleware(['auth', 'verified', 'profile.complete'])->group(function () {
         Route::put('/inquiries/{id}/read', [InquiryController::class, 'markInquiryRead'])->name('inquiries.read');
         Route::put('/inquiries/{id}/unread', [InquiryController::class, 'markInquiryUnread'])->name('inquiries.unread');
         Route::delete('/inquiries/{id}', [InquiryController::class, 'deleteInquiry'])->name('inquiries.destroy');
-        
         Route::get('/filtered-words', [FilteredWordController::class, 'index'])->name('filtered-words');
         Route::post('/filtered-words', [FilteredWordController::class, 'store'])->name('filtered-words.store');
         Route::delete('/filtered-words/{id}', [FilteredWordController::class, 'destroy'])->name('filtered-words.destroy');
