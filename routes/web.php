@@ -12,8 +12,10 @@ use App\Http\Controllers\ExportController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\User\AlumniVerificationController;
+use App\Http\Controllers\User\FeedbackController;
 use App\Http\Controllers\User\StaticPageController;
 use App\Http\Controllers\HomeController;
+use App\Models\Feedback;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\ProfileCompletionController;
 use App\Http\Controllers\Auth\OtpVerificationController;
@@ -74,6 +76,8 @@ Route::middleware(['auth', 'verified', 'profile.complete'])->group(function () {
             Route::put('/inquiries/{id}/read', [InquiryController::class, 'markRead'])->name('inquiries.read');
             Route::put('/inquiries/{id}/unread', [InquiryController::class, 'markUnread'])->name('inquiries.unread');
             Route::delete('/inquiries/{id}', [InquiryController::class, 'destroy'])->name('inquiries.destroy');
+
+            Route::post('/user/requests/{id}/feedback', [FeedbackController::class, 'storeFeedback'])->name('feedback.store');
         });
     });
 
@@ -97,12 +101,12 @@ Route::middleware(['auth', 'verified', 'profile.complete'])->group(function () {
         Route::post('/users', [UserController::class, 'storeUser'])->name('users.store');
         Route::put('/users/{id}', [UserController::class, 'updateUser'])->name('users.update');
         Route::delete('/users/{id}', [UserController::class, 'destroyUser'])->name('users.destroy');
-        
+
         Route::post('/notifications/mark-as-read', [NotificationController::class, 'markNotificationsAsRead'])->name('notifications.read');
-        
+
         Route::get('/export/excel', [ExportController::class, 'exportExcel'])->name('export.excel');
         Route::get('/export/pdf', [ExportController::class, 'exportPdf'])->name('export.pdf');
-        
+
         Route::get('/inquiries', [InquiryController::class, 'inquiries'])->name('inquiries');
         Route::get('/inquiries/attachment/{id}', [InquiryController::class, 'viewAttachment'])->name('inquiries.attachment');
         Route::post('/inquiries/{id}/reply', [InquiryController::class, 'replyInquiry'])->name('inquiries.reply');
@@ -112,10 +116,11 @@ Route::middleware(['auth', 'verified', 'profile.complete'])->group(function () {
         Route::put('/inquiries/{id}/read', [InquiryController::class, 'markInquiryRead'])->name('inquiries.read');
         Route::put('/inquiries/{id}/unread', [InquiryController::class, 'markInquiryUnread'])->name('inquiries.unread');
         Route::delete('/inquiries/{id}', [InquiryController::class, 'deleteInquiry'])->name('inquiries.destroy');
-        
+
         Route::get('/filtered-words', [FilteredWordController::class, 'index'])->name('filtered-words');
         Route::post('/filtered-words', [FilteredWordController::class, 'store'])->name('filtered-words.store');
         Route::delete('/filtered-words/{id}', [FilteredWordController::class, 'destroy'])->name('filtered-words.destroy');
+
         Route::patch('/requests/{id}/archive', [RequestController::class, 'archiveRequest'])->name('requests.archive');
         Route::patch('/requests/{id}/unarchive', [RequestController::class, 'unarchiveRequest'])->name('requests.unarchive');
     });

@@ -93,7 +93,7 @@ class CertificateRequest extends Model
     public function feedback()
     {
         // FIX: Explicitly set foreign key to 'request_id'
-        return $this->hasMany(Feedback::class, 'request_id');
+        return $this->hasOne(Feedback::class, 'request_id');
     }
 
     /**

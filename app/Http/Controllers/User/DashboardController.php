@@ -70,7 +70,7 @@ class DashboardController extends Controller
                 'user_id' => $request->user()->id,
                 'service_id' => $service->id,
                 'status_id' => $status->id,
-                'delivery_mode' => $request->delivery_mode, 
+                'delivery_mode' => $request->delivery_mode,
                 'purpose' => $data['purpose'] ?? null,
                 'preferred_claiming_date' => $data['preferred_claiming_date'] ?? null,
             ]);
@@ -113,7 +113,7 @@ class DashboardController extends Controller
 
     private function userRequests()
     {
-        return CertificateRequest::with(['service', 'status', 'statusHistory.toStatus'])
+        return CertificateRequest::with(['service', 'status', 'statusHistory.toStatus', 'feedback'])
             ->where('user_id', auth()->id());
     }
 
